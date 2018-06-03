@@ -1,0 +1,47 @@
+library(ISLR)
+library(e1071)
+library(ISLR)
+library(dplyr)
+library(caTools)
+library(ggplot2)
+library(randomForest)
+library(tree)
+library(gbm)
+library(plotly)
+library(caret)
+library(e1071)
+
+#Changinh int to factor 
+df$inq.last.6mths <- as.factor((df$inq.last.6mths))
+df$delinq.2yrs <- as.factor(df$delinq.2yrs)
+df$pub.rec <- as.factor(df$pub.rec)
+df$not.fully.paid <- as.factor(df$not.fully.paid)
+contrasts(df$not.fully.paid)
+#EDA
+pl1 <- ggplot(df,aes(purpose,fill = not.fully.paid)) + geom_bar( color= 'black') +
+    scale_x_discrete(labels = c('Other','CC','D.Consolidation','Education', 'Home', 
+                                'Major Purchase', 'SmBusiness')) + 
+    theme(axis.text.x = element_text(angle=45,hjust = 1))
+
+proportion <- df %>%
+    group_by(purpose, not.fully.paid) %>%
+    tally() %>%
+    group_by(purpose) %>%
+    mutate(pct = n / sum(n))%>%
+    mutate(label_y = cumsum(pct))
+
+pl2 <- ggplot(proportion, aes(factor(purpose), pct, fill = factor(not.fully.paid, levels = c(1, 0)))) +
+  geom_bar(stat = "identity", color = "grey40") +
+  scale_x_discrete(labels = c('Other','CC','D.Consolidation','Education', 'Home', 
+                              'Major Purchase', 'SmBusiness'))+
+  geom_text(aes(label = round(pct, 2), y = label_y), vjust = 1, color = "white") +
+  scale_fill_manual(values = c("#a1d99b", "#31a354")) +
+  labs(fill = "Paid?") + 
+  theme(axis.text.x = element_text(angle=45,hjust = 1))
+
+pl3 <- ggplot(df, aes(fac.rate)) + stat_count(aes(fill= not.fully.paid),
+                                  position=position_dodge(), alpha = 0.5) + 
+  scale_x_discrete(labels = c('1','2','3','4')) + labs( fill = 'Rate Groups') + 
+  scale_fill_manual(values = c('black','red'))
+
+#Building a model 
