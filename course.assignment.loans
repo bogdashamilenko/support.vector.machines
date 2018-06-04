@@ -58,3 +58,4 @@ tune.results <- tune(svm,train.x=not.fully.paid~.-fac.rate, data=train,kernel='r
 tuned.model <- svm(not.fully.paid ~.-fac.rate, data = train,kernel = 'radial',cost = 1, gamma = 0.5)
 tuned.predicted <- predict(tuned.model, test)
 table(tuned.predicted, test$not.fully.paid)
+plot(tuned.model,train, int.rate~days.with.cr.line)
