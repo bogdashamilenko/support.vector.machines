@@ -1,6 +1,6 @@
 library(ISLR)
 library(e1071)
-library(ISLR)
+library(MASS)
 library(dplyr)
 library(caTools)
 library(ggplot2)
@@ -9,7 +9,7 @@ library(tree)
 library(gbm)
 library(plotly)
 library(caret)
-library(e1071)
+library(Amelia)
 
 #Changinh int to factor 
 df$inq.last.6mths <- as.factor((df$inq.last.6mths))
