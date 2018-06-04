@@ -39,6 +39,7 @@ pl2 <- ggplot(proportion, aes(factor(purpose), pct, fill = factor(not.fully.paid
   labs(fill = "Paid?") + 
   theme(axis.text.x = element_text(angle=45,hjust = 1))
 
+df$fac.rate <- cut(df$int.rate,4)
 pl3 <- ggplot(df, aes(fac.rate)) + stat_count(aes(fill= not.fully.paid),
                                   position=position_dodge(), alpha = 0.5) + 
   scale_x_discrete(labels = c('1','2','3','4')) + labs( fill = 'Rate Groups') + 
