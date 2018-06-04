@@ -46,3 +46,15 @@ pl3 <- ggplot(df, aes(fac.rate)) + stat_count(aes(fill= not.fully.paid),
   scale_fill_manual(values = c('black','red'))
 
 #Building a model 
+set.seed(1)
+indik <- sample.split(df,SplitRatio = 0.8)
+train <- subset(df,indik == T)
+test <- subset(df, indik == F)
+
+model.basik <- svm(not.fully.paid~.-fac.rate, train)
+predicted.basik <- predict(model.basik,test)
+table(predicted.basik,test$not.fully.paid)
+tune.results <- tune(svm,train.x=not.fully.paid~.-fac.rate, data=train,kernel='radial',ranges=list(cost=c(1,2), gamma=c(0.5,1)))
+tuned.model <- svm(not.fully.paid ~.-fac.rate, data = train,kernel = 'radial',cost = 1, gamma = 0.5)
+tuned.predicted <- predict(tuned.model, test)
+table(tuned.predicted, test$not.fully.paid)
